@@ -50,11 +50,16 @@
             <!-- Add Expense -->
         <section class="card">
             <h2 class="card-title">Add Expense</h2>
-            <form class="add-form">
+            <form class="add-form" method="post" action="{{url_for('add')}}">
                     
                 <label class="field">
                     <span class="field-label">Description</span>
-                    <input type="text" class="input" placeholder="e.g., Grocerries">
+                    <input
+                        type="text"
+                        class="input"
+                        placeholder="e.g., Grocerries"
+                        name="description"
+                    >
                 </label>
                     
                     
@@ -68,20 +73,26 @@
                             min="0.01"
                             placeholder="25.00"
                             class="input"
+                            name="amount"
+
                                 >
                     </label>
                     
                     
                     <label class="field">
                         <span class="field-label">Date</span>
-                        <input type="date" class="input">
+                        <input
+                            type="date"
+                            class="input"
+                            name="date"
+                        >
                     </label>
                 </div>
                 
                 
                 <label class="field field-wide">
                     <span class="field-label">Category</span>
-                    <select class="input">
+                    <select class="input" name="category">
                             <option value="food">Food</option>
                             <option value="transport">Transport</option>
                             <option value="rent">ٌRent</option>
