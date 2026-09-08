@@ -1,0 +1,283 @@
+*,
+*::after,
+*::before {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0
+}
+
+html {
+    font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    scroll-behavior: smooth;
+}
+
+body {
+    background-color: #0f172a;
+    color: #f1f5f9;
+}
+
+input,
+button,
+textarea, 
+select {
+    font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+:placeholder {
+    font-family: inherit;
+}
+
+.container {
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+}
+
+.page-title {
+    font-size: 1.875rem;
+    font-weight: 600;
+    margin-top: 0;
+    margin-bottom: .5rem;
+}
+
+.page-subtitle {
+    font-size: .875rem; 
+    color: rgb(148, 163, 184);
+    margin-bottom: 1.5rem;
+}
+
+.grid-top {
+    display: grid;
+    grid-template-columns: 1fr; /* 1 column by default (mobile) */
+    gap: 1rem;
+}
+
+/* On larger screen we have 3 columns and filter card take up 2 column */
+
+@media (min-width: 1024px) {
+    .grid-top {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .card-filters {
+        grid-column: span 2;
+    }
+}
+
+/* card repeated style */
+
+.card {
+    padding: 1rem;
+    border: 1px solid #1e293b;
+    border-radius: 1rem;
+}
+
+.card-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: .75rem;
+}
+
+/* Forms styling */
+
+.field {
+    display: block;
+    font-size: .875rem;
+}
+
+.field-label {
+    display: block;
+    color: rgb(148, 163, 184);
+    margin-bottom: .5rem
+}
+
+.input {
+    width: 100%; /* mobile */
+    background-color: #1e293b;
+    color: #f1f5f9;
+    padding: .5rem .75rem;
+    border: 1px solid #334155;
+    border-radius: .75rem;
+    font-size: .875rem;
+}
+
+/* 5 columns on desktop  */
+
+.filters-form {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: .75rem;
+    padding-right: .75rem;
+    align-items: end;
+}
+
+@media (min-width: 768px) {
+    .filters-form {
+        grid-template-columns: repeat(5, 1fr);
+    }
+
+    .field-wide {
+        grid-column: span 2;
+    }
+}
+
+.add-form > * + * {
+    margin-top: .75rem;
+}
+
+.two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: .75rem;
+}
+
+/* Buttons Styling */
+
+.button-row {
+    display: flex;
+    gap: .75rem;
+}
+
+.btn {
+    display: inline-block;
+    width: 100%;
+    background-color: #1e293b;
+    padding: .5rem 1rem;
+    border: 1px solid rgb(148, 163, 184);
+    border-radius: .75rem;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background-color: #38bdf833;
+    color: #38bdf8;
+    border-color: rgba(56, 189, 248, .3);
+}
+
+.btn-primary:hover {
+    background-color: rgba(56, 189, 248, .3);
+}
+
+.btn-secondary {
+    color: #f1f5f9;
+    background-color: #1e293b;
+}
+
+.btn-secondary:hover {
+    background-color: rgba(255, 255, 255, .2);
+}
+
+.total-line {
+    margin-top: 1rem;
+    font-size: .875rem;
+    color: rgb(148, 163, 184);
+}
+
+.total-line-global {
+    margin: 1.5rem 0 .75rem 0;
+    
+}
+
+.total-label {
+    margin-right: .5rem;
+}
+
+.total-value {
+    display: inline-block;
+    border: 1px solid #334155;
+    background-color: #1e293b;
+    padding: .25rem .75rem;
+    border-radius: .75rem;
+    font-weight: 600;
+}
+
+.export-line {
+    margin-top: .75rem;
+
+}
+.export-link {
+    color: rgb(148, 163, 184);
+    font-size: .75rem;
+}
+.export-link:hover {
+    color: #38bdf8;
+}
+
+.btn-delete {
+    color: #fda4af;
+    background: transparent;
+    border: 1px solid rgba(251, 113, 113, .3);
+    font-size: .75rem;
+    padding: .25rem .75rem;
+    border-radius: .5rem;
+    cursor: pointer;
+}
+
+.btn-delete:hover {
+    color: #fecdd3;
+}
+
+/* Expenses Table */
+
+.table-header {
+    padding: .75rem 1rem;
+}
+
+.table-scroll {
+    overflow-x: auto;
+}
+
+.expenses-table {
+    min-width: 100%;
+    font-size: .875rem;
+    border-collapse: collapse;
+}
+
+th, td {
+    text-align: left;
+    padding: .75rem 1rem;
+}
+.align-right {
+    text-align: right;
+}
+
+.empty-row {
+    padding: 1.5rem 1rem;
+    text-align: center;
+}
+
+.card-table {
+    margin-bottom: 1.5rem;
+}
+
+thead {
+    background-color: rgba(30, 41, 59, .5);
+}
+
+.grid-charts {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+}
+
+@media (min-width: 1024px) {
+    .grid-charts {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.chart-title {
+    font-weight: 600;
+    margin-bottom: .5rem;
+}
+
+.main-footer {
+    max-width: 72rem;
+    margin: 0 auto;
+    text-align: center;
+    font-size: .75rem;
+    color: rgb(148, 163, 184);
+    padding: 0 1rem 2rem;
+}

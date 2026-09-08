@@ -1,0 +1,153 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+<main class="container">
+    <h1 class="page-title">Dashboard</h1>
+    <p class="page-subtitle">Track spending, filter by date/category, and visualize instantly.</p>
+
+    <div class="grid-top">
+        <section class="card card-filters">
+            <h2 class="card-title">Filters</h2>
+            <form class="filters-form">
+                <label class="field">
+                    <span class="field-label">Start</span>
+                    <input type="date" class="input">
+                </label>
+                <label class="field">
+                    <span class="field-label">End</span>
+                    <input type="date" class="input">
+                </label>
+                <label class="field">
+                    <span class="field-label">Category</span>
+                    <select class="input">
+                        <option value="">All</option>
+                        <option value="food">Food</option>
+                        <option value="transport">Transport</option>
+                        <option value="utilities">Utilities</option>
+                    </select>
+                </label>
+
+                <div class="button-row">
+                    <button type="submit" class="btn btn-primary">Apply</button>
+                    <a href="#" class="btn btn-secondary">Reset</a>
+                </div>
+            </form>
+
+            <!-- Total -->
+
+            <div class="total-line">
+                <span class="total-label">Total:</span>
+                <span class="total-value">$0.00</span>
+            </div>
+
+            <!-- Export link -->
+            <div class="export-line">
+                <a href="" class="export-link">Export CSV (current filter)</a>
+            </div>
+        </section>
+
+            <!-- Add Expense -->
+        <section class="card">
+            <h2 class="card-title">Add Expense</h2>
+            <form class="add-form">
+                    
+                <label class="field">
+                    <span class="field-label">Description</span>
+                    <input type="text" class="input" placeholder="e.g., Grocerries">
+                </label>
+                    
+                    
+                        
+                <div class="two-col">
+                    <label for="" class="field">
+                        <span class="field-label">Amount</span>
+                        <input
+                            type="number"
+                            step="0.01"
+                            min="0.01"
+                            placeholder="25.00"
+                            class="input"
+                                >
+                    </label>
+                    
+                    
+                    <label class="field">
+                        <span class="field-label">Date</span>
+                        <input type="date" class="input">
+                    </label>
+                </div>
+                
+                
+                <label class="field field-wide">
+                    <span class="field-label">Category</span>
+                    <select class="input">
+                            <option value="food">Food</option>
+                            <option value="transport">Transport</option>
+                            <option value="rent">ٌRent</option>
+                            <option value="utilities">Utilities</option>
+                    </select>
+                </label>
+                <button class="btn btn-primary btn-full" type="submit">Add Expense</button>
+            </form>
+        </section>
+    </div>
+
+        <!-- Total (global) -->
+    <div class="total-line total-line-global">
+        <span class="total-label">Total:</span>
+        <span class="total-value">$0.00</span>
+    </div>
+
+
+        <!-- Expenses table -->
+    <section class="card card-table">
+        <div class="table-header">
+            <h2 class="card-title">Expenses</h2>
+        </div>
+        <div class="table-scroll">
+            <table class="expenses-table">
+                <thead>
+                    <tr>
+                        <th class="align-left">Date</th>
+                        <th class="align-left">Description</th>
+                        <th class="align-left">Category</th>
+                        <th class="align-right">Amount</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="table-row">
+                        <td>2025-09-25</td>
+                        <td>Grocerries</td>
+                        <td>Food</td>
+                        <td class="align-right">$25.00</td>
+                        <td class="align-right">
+                            <button class="btn-delete">Delete</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="5" class="empty-row">
+                            No expenses yet - add your first one above.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+
+        <!-- Charts -->
+    <section class="grid-charts">
+        <div class="card">
+            <h3 class="chart-title">By Category</h3>
+            <canvas id="dayChart" height="140"></canvas>
+        </div>
+        <div class="card">
+            <h3 class="chart-title">Spending Over Time</h3>
+            <canvas id="dayChart" height="140"></canvas>
+        </div>
+    </section>
+</main>
+
+{% endblock %}
