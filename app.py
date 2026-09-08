@@ -98,7 +98,9 @@ def index():
         total=total,
         start_str=start_str,
         end_str=end_str,
-        selected_category=selected_category
+        selected_category=selected_category,
+        cat_labels=cat_labels,
+        cat_values=cat_values
         )
 
 
