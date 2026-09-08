@@ -14,7 +14,20 @@
         <title>{% block title %}Wallety{% endblock %}</title>
     </head>
     <body>
-        
+
+        <!-- handle flash messages with categories=True -->
+
+        {% with messages = get_flashed_messages(with_categories=True) %}
+            {% if messages %}
+            <ul class="flash">
+                {% for category, message in messages%}
+                    <li class="{{category}}">{{message}}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        {% endwith %}
+
+
         <main>
             {% block body %}{% endblock %}
         </main>
