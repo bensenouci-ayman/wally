@@ -1,5 +1,6 @@
-from flask import Flask, redirect, render_template, url_for, request, flash, request
+from flask import Flask, redirect, render_template, url_for, request, flash, request, session
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import func
 from datetime import date, datetime
 
 # create instance
@@ -68,12 +69,26 @@ def index():
     if selected_category:
         q = q.filter(Expense.category == selected_category)
 
+    expenses = q.order_by(Expense.date.desc(), Expense.id.desc()).all()
+    total = round(sum(e.amount for e in expenses), 2)
+
+    cat_q = db.session.query(Expense.category, func.sum(Expense.amount))
+
+    if start_date:
+        cat_q = cat_q.filter(Expense.date >= start_date)
+    if end_date:
+        cat_q = cat_q.filter(Expense.date <= end_date)
+
+    if selected_category:
+        cat_q = cat_q.filter(Expense.category == selected_category)
+
+    cat_rows = cat_q.group_by(Expense.category).all()
+    cat_labels = [c for c, _ in cat_rows]
+    cat_values = [round(float(s or 0), 2) for _, s in cat_rows]
+    
 
 
     
-
-    expenses = q.order_by(Expense.date.desc(), Expense.id.desc()).all()
-    total = round(sum(e.amount for e in expenses), 2)
 
     return render_template(
         "index.html",
