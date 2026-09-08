@@ -19,6 +19,7 @@ class Expense(db.Model):
     date = db.Column(db.Date, nullable=False, default=date.today)
 
 
+# create db only when it doesn't exist
 with app.app_context():
     db.create_all()
 
@@ -26,7 +27,8 @@ with app.app_context():
 # home decorator
 @app.route("/")
 def index():
-    return render_template("index.html")
+    expenses = Expense.query.order_by(Expense.date.desc(), Expense.id.desc()).all()
+    return render_template("index.html", expenses=expenses)
 
 
 # add decorator

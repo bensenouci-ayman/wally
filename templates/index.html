@@ -128,20 +128,33 @@
                     </tr>
                 </thead>
                 <tbody>
+
+                    {% if expenses %}
+
+                    {% for e in expenses %}
+
                     <tr class="table-row">
-                        <td>2025-09-25</td>
-                        <td>Grocerries</td>
-                        <td>Food</td>
-                        <td class="align-right">$25.00</td>
+                        <td>{{e.date.strftime("%Y-%m-%d") if e.date else ""}}</td>
+                        <td>{{e.description}}</td>
+                        <td>{{e.category}}</td>
+                        <td class="align-right">${{ "%.2f" |format(e.amount) }}</td>
                         <td class="align-right">
                             <button class="btn-delete">Delete</button>
                         </td>
                     </tr>
+
+                    {% endfor %}
+
+                    {% else %}
+
                     <tr>
                         <td colspan="5" class="empty-row">
                             No expenses yet - add your first one above.
                         </td>
                     </tr>
+
+                    {% endif %}
+
                 </tbody>
             </table>
         </div>
