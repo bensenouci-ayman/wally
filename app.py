@@ -1,4 +1,4 @@
-from flask import Flask, redirect, render_template, url_for, request, flash
+from flask import Flask, redirect, render_template, url_for, request, flash, request
 from flask_sqlalchemy import SQLAlchemy
 from datetime import date, datetime
 
@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 # Database Configuration
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///expenses.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATION'] = False
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'my-secret-key'
 db = SQLAlchemy(app)
 
@@ -27,18 +27,63 @@ with app.app_context():
 CATEGORIES = ['Food', 'Transport', 'Rent', 'Utilities', 'Health', 'Invest']
 
 
+# add helper function (string comes from form -> objects to work with)
+def parse_date_or_none(s: str):
+    if not s:
+        return None
+    try:
+        return datetime.strptime(s, "%Y-%m-%d").date()
+    except ValueError:
+        return None
+
+    
+
+
 # home decorator
 @app.route("/")
 def index():
 
-    expenses = Expense.query.order_by(Expense.date.desc(), Expense.id.desc()).all()
+    # reading query string 
+    start_str = (request.args.get("start") or "").strip()
+    end_str = (request.args.get("end") or "").strip()
+    selected_category = (request.args.get("category") or "").strip()
+
+
+
+    # parsing (str -> object)
+    start_date = parse_date_or_none(start_str)
+    end_date = parse_date_or_none(end_str)
+
+    if start_date and end_date and end_date < start_date:
+        flash("Check your dates", "error")
+        # reseting
+        start_date = end_date = None
+        start_srt = end_str = ""
+
+    q = Expense.query
+    if start_date:
+        q = q.filter(Expense.date >= start_date)
+    if end_date:
+        q = q.filter(Expense.date <= end_date)
+    if selected_category:
+        q = q.filter(Expense.category == selected_category)
+
+
+
+    
+
+    expenses = q.order_by(Expense.date.desc(), Expense.id.desc()).all()
     total = round(sum(e.amount for e in expenses), 2)
 
     return render_template(
         "index.html",
-        expenses=expenses,
         categories=CATEGORIES,
-        total=total
+        today=date.today().isoformat(),
+        expenses=expenses,
+        total=total,
+        start_str=start_str,
+        end_str=end_str,
+        selected_category=selected_category
         )
 
 
