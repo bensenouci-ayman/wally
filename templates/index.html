@@ -139,7 +139,13 @@
                         <td>{{e.category}}</td>
                         <td class="align-right">${{ "%.2f" |format(e.amount) }}</td>
                         <td class="align-right">
-                            <button class="btn-delete">Delete</button>
+
+                            <form action="{{url_for('delete', expense_id=e.id)}}"           method="post"
+                            onsubmit="return confirm('Are you sure you want to delete')"
+                            >
+                                <button class="btn-delete">Delete</button>
+                            </form>
+
                         </td>
                     </tr>
 

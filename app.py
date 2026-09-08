@@ -73,6 +73,19 @@ def add():
 
     flash("Expense added!", "success")
     return redirect(url_for("index"))
+
+
+# Delete route
+@app.route("/delete/<int:expense_id>", methods=['POST'])
+def delete(expense_id):
+    e = Expense.query.get_or_404(expense_id)
+    db.session.delete(e)
+    db.session.commit()
+    flash("Expense deleted", "success")
+    return redirect(url_for("index"))
+
+
+
     
 
 
