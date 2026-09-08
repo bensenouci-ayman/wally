@@ -1,6 +1,6 @@
 from flask import Flask, redirect, render_template, url_for, request, flash
 from flask_sqlalchemy import SQLAlchemy
-from datetime import date
+from datetime import date, datetime
 
 # create instance
 app = Flask(__name__)
@@ -8,6 +8,7 @@ app = Flask(__name__)
 # Database Configuration
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///expenses.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATION'] = False
+app.config['SECRET_KEY'] = 'my-secret-key'
 db = SQLAlchemy(app)
 
 class Expense(db.Model):
@@ -38,6 +39,7 @@ def add():
 
     if not description or not amount_str or not category or not date_str:
         flash("Please fill all the fields", "error")
+        return redirect(url_for("index"))
 
     try:
         amount = float(amount_str)
@@ -46,6 +48,18 @@ def add():
     except ValueError:
         flash("Amount must be a positive number", "error")
         return redirect(url_for("index"))
+
+    try:
+        d = datetime.strptime(date_str, "%Y-%m-%d").date() if date_str else date.today()
+    except ValueError:
+        d = date.today()
+
+    e = Expense(description=description, amount=amount_str, category=category, date=d)
+    db.session.add(e)
+    db.session.commit()
+
+    flash("Expense added!", "success")
+    return redirect(url_for("index"))
     
 
 
