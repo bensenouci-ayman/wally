@@ -93,10 +93,10 @@
                 <label class="field field-wide">
                     <span class="field-label">Category</span>
                     <select class="input" name="category">
-                            <option value="food">Food</option>
-                            <option value="transport">Transport</option>
-                            <option value="rent">ٌRent</option>
-                            <option value="utilities">Utilities</option>
+
+                        {% for c in categories %}
+                            <option value="{{c}}">{{c}}</option>
+                        {% endfor %}
                     </select>
                 </label>
                 <button class="btn btn-primary btn-full" type="submit">Add Expense</button>
@@ -107,7 +107,7 @@
         <!-- Total (global) -->
     <div class="total-line total-line-global">
         <span class="total-label">Total:</span>
-        <span class="total-value">$0.00</span>
+        <span class="total-value">${{total}}</span>
     </div>
 
 
