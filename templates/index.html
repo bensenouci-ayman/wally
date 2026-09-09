@@ -58,7 +58,7 @@
 
             <!-- Export link -->
             <div class="export-line">
-                <a href="" class="export-link">Export CSV (current filter)</a>
+                <a href="{{url_for('export_csv', start=start_str, end=end_str, category=selected_category)}}" class="export-link">Export CSV (current filter)</a>
             </div>
         </section>
 
