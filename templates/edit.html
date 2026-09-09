@@ -9,7 +9,7 @@
 
     <section class="card card-narrow">
 
-      <form method="post" action="" class="add-form">
+      <form method="post" action="{{url_for('edit_post', expense_id=expense.id)}}" class="add-form">
 
         <label class="field">
           <span class="field-label">Description</span>
