@@ -5,7 +5,6 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="description" content="Track spending, filter by date/category, and visualize instantly.">
         <meta name="keywords" content="Track spending, filter spending, follow expenses, finance management">
-
         
         <!-- (Reset/ Normalize) -->
         <link rel="stylesheet" href="{{url_for('static', filename='css/normalize.css')}}">
@@ -14,30 +13,35 @@
         <title>{% block title %}Wallety{% endblock %}</title>
 
         <!-- bar charts js -->
+         
          <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     </head>
     <body>
 
+    <main>
+
+        <nav class="navigation">
+            <a href="{{url_for('index')}}"><img src="../static/logo-wally-white.svg" alt="wally-logo" width="66px"></a>
+        <nav>
+
         <!-- handle flash messages with categories=True -->
 
-        {% with messages = get_flashed_messages(with_categories=True) %}
+        {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
-            <ul class="flash">
-                {% for category, message in messages%}
-                    <li class="{{category}}">{{message}}</li>
+                {% for category, message in messages %}
+                    <div class="flash {{ category }}">
+                        {{ message }}
+                    </div>
                 {% endfor %}
-            </ul>
             {% endif %}
         {% endwith %}
 
-
-        <main>
             {% block body %}{% endblock %}
+            
+            <footer class="main-footer">
+                Build with Flask, SQlite, Flask-login & vanilla html&css
+            </footer>
+            
         </main>
-
-        <footer class="main-footer">
-            Build with Flask, SQlite, Flask-login & vanilla html&css
-        </footer>
-
     </body>
 </html>
