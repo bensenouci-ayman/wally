@@ -272,4 +272,25 @@
     
 </script>
 
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    // Select all flash message containers
+    const flashMessages = document.querySelectorAll('.flash');
+
+    flashMessages.forEach(function(message) {
+      setTimeout(function() {
+        // Smoothly fade out the element
+        message.style.transition = "opacity 0.5s ease";
+        message.style.opacity = "0";
+        
+        // Remove from DOM after fade completes
+        setTimeout(function() {
+          message.remove();
+        }, 500);
+      }, 3000); // 5000ms = 5 seconds
+    });
+  });
+</script>
+
 {% endblock %}
