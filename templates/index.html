@@ -201,6 +201,11 @@
     const catLabels = {{(cat_labels or []) | tojson}};
     const catValues = {{(cat_values or []) | tojson}};
 
+    const dayLabels = {{(day_labels or []) | tojson}};
+    const dayValues = {{(day_values or []) | tojson}};
+
+
+
     if (document.getElementById('catChart') && catLabels.length > 0) {
         const catCtx = document.getElementById('catChart').getContext('2d');
 
@@ -224,6 +229,38 @@
             }
         });
     }
+
+    if (document.getElementById('dayChart') && dayLabels.length > 0) {
+        const dayCtx = document.getElementById('dayChart').getContext('2d');
+
+        new Chart(dayCtx, {
+            type: 'bar',
+            data: {
+                labels: dayLabels, 
+                datasets: [{
+                    label: 'Total',
+                    data: dayValues,
+                    backgroundColor: [
+                        '#3b82f6', '#ef4444', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899'
+                    ]
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        labels: { color: '#334155' }
+                    }
+                },
+                scales: {
+                    x: {ticks: {color: '#cbd5e1'}, grid: {color: '#334155'}},
+                    y: {ticks: {color: '#cbd5e1'}, grid: {color: '#334155'}}
+
+                }
+            }
+        });
+    }
+
+    
 </script>
 
 {% endblock %}
