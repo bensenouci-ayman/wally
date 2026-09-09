@@ -53,7 +53,7 @@
 
             <div class="total-line">
                 <span class="total-label">Total:</span>
-                <span class="total-value">${{total}}</span>
+                <span class="total-value">${{ '%.2f'|format(total or 0) }}</span>
             </div>
 
             <!-- Export link -->
@@ -123,7 +123,7 @@
         <!-- Total (global) -->
     <div class="total-line total-line-global">
         <span class="total-label">Total:</span>
-        <span class="total-value">${{total}}</span>
+        <span class="total-value">${{ '%.2f'|format(total or 0) }}</span>
     </div>
 
 
@@ -156,11 +156,16 @@
                         <td class="align-right">${{ "%.2f" |format(e.amount) }}</td>
                         <td class="align-right">
 
-                            <form action="{{url_for('delete', expense_id=e.id)}}"           method="post"
-                            onsubmit="return confirm('Are you sure you want to delete')"
-                            >
-                                <button class="btn-delete">Delete</button>
-                            </form>
+                            <div class="two-btn">
+
+                                <a href="{{url_for('edit')}}" class="btn btn-edit">Edit</a>
+
+                                <form action="{{url_for('delete', expense_id=e.id)}}", method="post"
+                                onsubmit="return confirm('Are you sure you want to delete')"
+                                >
+                                    <button class="btn-delete">Delete</button>
+                                </form>
+                            </div>
 
                         </td>
                     </tr>
