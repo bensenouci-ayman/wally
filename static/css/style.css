@@ -93,7 +93,7 @@ select {
 }
 
 .input {
-    width: 100%; /* mobile */
+    width: 100%;/* mobile */
     background-color: #1e293b;
     color: #f1f5f9;
     padding: .5rem .75rem;
@@ -312,4 +312,15 @@ thead {
 }
 .btn-edit:hover {
     background-color: #7dd3fc44;
+}
+.card-narrow {
+    /* max-width: 480px; */
+    /* margin: 0 auto; */
+    display: grid;
+    align-content: left;
+    max-width: 480px;
+}
+
+.left-align {
+    text-align: left;
 }

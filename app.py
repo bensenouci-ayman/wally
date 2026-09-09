@@ -161,6 +161,15 @@ def delete(expense_id):
     return redirect(url_for("index"))
 
 
+# Edit route
+@app.route("/edit/<int:expense_id>", methods=['GET'])
+def edit(expense_id):
+    e = Expense.query.get_or_404(expense_id)
+
+    return render_template("edit.html", expense=e, categories=CATEGORIES, today=date.today().isoformat())
+
+
+
 
 @app.route("/export.csv")
 def export_csv():
