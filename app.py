@@ -3,8 +3,11 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import func
 from datetime import date, datetime
 
-from flask_login import LoginManager
+from flask_login import LoginManager, UserMixin # UserMixin give us objects like isactive user_id..
 from sqlalchemy import text
+import re
+from werkzeug.security import generate_password_hash, check_password_hash
+from sqlalchemy.exc import IntegrityError
 
 
 
@@ -12,19 +15,16 @@ from sqlalchemy import text
 db = SQLAlchemy()
 login_manager = LoginManager()
 
-
-
-
 # Application Factory
 def create_app():
     app = Flask(__name__)
 
     # Database Configuration
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///expenses.db'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
     # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'  # fake db
-    app.config['SQLALCHEMY_BINDS'] = {
-        'users': 'sqlite:///app.db'
-    }
+    # app.config['SQLALCHEMY_BINDS'] = {
+    #     'users': 'sqlite:///app.db'
+    # }
 
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SECRET_KEY'] = 'my-secret-key-for-cs50-final-exam'
@@ -46,15 +46,22 @@ def create_app():
             return {"db", "error"}, 404
 
 
-
-
-
+    # MODELS
     class Expense(db.Model):
         id = db.Column(db.Integer, primary_key=True)
         description = db.Column(db.String(120), nullable=False)
         amount = db.Column(db.Float, nullable=False)
         category = db.Column(db.String(50), nullable=False)
         date = db.Column(db.Date, nullable=False, default=date.today)
+
+    class user(UserMixin, db.Model):
+        id = db.Column(db.Integer, primary_key=True)
+        username = db.Column(db.String(80), unique = True, nullable=False)
+        email = db.Column(db.String(120), unique = True, nullable=False)
+        password_hash = db.Column(db.String(255), nullable=False)
+
+        def __repr__(self):
+            return f"<User {self.username}>"
 
     
 
@@ -191,13 +198,89 @@ def create_app():
         )
 
 
-    @app.route('/register')
+    @app.route('/register', methods=["GET", "POST"])
     def register():
-        return render_template('register.html')
+
+        errors = []
+
+        if request.method == "POST":
+            username = (request.form.get("username") or "").strip()
+            email = (request.form.get("email") or "").strip()
+            password = request.form.get("password") or ""
+            confirm_password = request.form.get("confirm_password") or ""
+
+            # VALIDATION    
+            required_fields = [username, email, password, confirm_password]
+
+            if not all(required_fields):
+                errors.append("fill in all the gaps")
+                
+
+            if not (3 <= len(username) <= 50):
+                errors.append("username must be more than 3 characters")
+                
+
+            # check email pattern
+
+            if not re.match(r"^[^@\s]+@[^@\s]+\.[^@\s]+$", email):
+                errors.append("invalid email!")
+
+            if len(password) < 6:
+                errors.append("password should be more than 6 characters")
+            if password != confirm_password:
+                errors.append("passwords don't match")
+
+            # existing user
+            existing_user = user.query.filter((user.username == username) | (user.email == email)).first()
+            if existing_user:
+                flash("you already registered", "error")
+                errors.append("already registered!, login instead")
+                return redirect(url_for("register"))  
+
+            if not errors:
+                try:
+                    hashed_password = generate_password_hash(password) 
+
+
+                    # create a new user
+                    new_user = user(username=username, email=email, password_hash=hashed_password)
+                    db.session.add(new_user)
+                    db.session.commit()
+
+                    # flash message
+                    flash("Account created successfuly", "success")
+                    return redirect(url_for("login"))
+
+                except IntegrityError:
+                    db.session.rollback()
+                    errors.append("that username or email already registered!")
+
+                    flash("Username or email already exists", "error")
+
+        return render_template('register.html', errors=errors)
+
+    
     
     @app.route('/login')
     def login():
+
+        errors = []
+
+        if request.method == "POST":
+            email = (request.form.get("email") or "").strip()
+            password = request.form.get("password")
+
+            if not email:
+                errors.append("email is required!")
+            if not password:
+                errors.append("password is required!")
+
+                
+
+
         return render_template('login.html')
+
+    
 
     @login_manager.user_loader
     def load_user(user_id):

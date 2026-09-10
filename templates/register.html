@@ -1,0 +1,102 @@
+{% extends "layout.html" %} 
+{% block title %}Register · Flask Auth Lite{% endblock
+%} {% block body %}
+<section class="container">
+  <div class="card card-narrow">
+    <h1 class="page-title">Create your account</h1>
+    <p class="page-subtitle">
+      Choose a username, add your email, and set a strong password.
+    </p>
+
+    {% if errors %}
+    <div>
+
+        <ul style="list-style: none; line-height: 1.55; margin-bottom: 1rem;">
+        {% for e in errors %}
+          <li style="font-size: .875rem; color: #f1f5f9;">{{e}}</li>
+        {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    <form class="add-form" method="post" action="{{url_for('register')}}" novalidate>
+      <div class="field">
+        <label for="username" class="field-label"
+          >Username</label
+        >
+        <input
+          id="username"
+          name="username"
+          type="text"
+          required
+          minlength="3"
+          maxlength="80"
+          class="input"
+          placeholder="thepythonmentor"
+        />
+      </div>
+
+      <div class="field">
+        <label for="email" class="field-label"
+          >Email</label
+        >
+        <input
+          id="email"
+          name="email"
+          type="email"
+          required
+          maxlength="120"
+          class="input"
+          placeholder="you@example.com"
+        />
+      </div>
+
+      <div class="label">
+        <label for="password" class="field-label"
+          >Password</label
+        >
+        <input
+          id="password"
+          name="password"
+          type="password"
+          required
+          minlength="6"
+          class="input"
+          placeholder="••••••••"
+        />
+      </div>
+
+      <div class="label">
+        <label for="confirm_password" class="field-label"
+          >Confirm password</label
+        >
+        <input
+          id="confirm_password"
+          name="confirm_password"
+          type="password"
+          required
+          minlength="6"
+          class="input"
+          placeholder="••••••••"
+        />
+      </div>
+
+      <button
+        type="submit"
+        class="btn btn-primary"
+        style="
+        margin-top: 1.125rem;
+        margin-bottom: 1rem;
+        "
+      >
+        Create account
+      </button>
+    </form>
+
+    <p style="font-size: .875rem;">
+      Already have an account?
+      <a href="/login" style="text-decoration: none; color: lightskyblue;">Sign in</a>.
+    </p>
+  </div>
+</section>
+{% endblock %}
