@@ -8,7 +8,18 @@
       Enter your email and password to access your dashboard.
     </p>
 
-    <form class="add-form" method="post" action="/login" novalidate>
+    {% if errors %}
+    <div>
+
+        <ul style="list-style: none; line-height: 1.55; margin-bottom: 1rem;">
+        {% for e in errors %}
+          <li style="font-size: .875rem; color: #f1f5f9;">{{e}}</li>
+        {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    <form class="add-form" method="post" action="{{url_for('login')}}" novalidate>
       <div class="field">
         <label for="email" class="field-label"
           >Email</label

@@ -12,17 +12,29 @@
         <link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}">
         <title>{% block title %}Wallety{% endblock %}</title>
 
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+            tailwind.config = {
+                darkMode: "class",
+                theme: { extend: { colors: { brand: { DEFAULT: "#38bdf8" } } } },
+            };
+        </script>
+
         <!-- bar charts js -->
          
          <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     </head>
     <body>
 
-    <main>
+    <main class="container">
 
-        <nav class="navigation">
-            <a href="{{url_for('index')}}"><img src="../static/logo-wally-white.svg" alt="wally-logo" width="55px"></a>
-        <nav>
+        {% block navbar %}
+
+         <nav class="navigation" >
+             <a href="{{url_for('index')}}"><img src="../static/logo-wally-white.svg" alt="wally-logo" width="55px"></a>
+         <nav>  
+
+        {% endblock %}
 
         <!-- handle flash messages with categories=True -->
 
@@ -43,5 +55,24 @@
             </footer>
             
         </main>
+        <script>
+  document.addEventListener("DOMContentLoaded", function() {
+    // Select all flash message containers
+    const flashMessages = document.querySelectorAll('.flash');
+
+    flashMessages.forEach(function(message) {
+      setTimeout(function() {
+        // Smoothly fade out the element
+        message.style.transition = "opacity 0.5s ease";
+        message.style.opacity = "0";
+        
+        // Remove from DOM after fade completes
+        setTimeout(function() {
+          message.remove();
+        }, 500);
+      }, 3000); // 5000ms = 5 seconds
+    });
+  });
+</script>
     </body>
 </html>

@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import func
 from datetime import date, datetime
 
-from flask_login import LoginManager, UserMixin # UserMixin give us objects like isactive user_id..
+from flask_login import LoginManager, login_user, login_required, logout_user, current_user, UserMixin # UserMixin give us objects like isactive user_id..
 from sqlalchemy import text
 import re
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -53,6 +53,7 @@ def create_app():
         amount = db.Column(db.Float, nullable=False)
         category = db.Column(db.String(50), nullable=False)
         date = db.Column(db.Date, nullable=False, default=date.today)
+        user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
     class user(UserMixin, db.Model):
         id = db.Column(db.Integer, primary_key=True)
@@ -91,10 +92,15 @@ def create_app():
         except ValueError:
             return None
 
-
-    # Home route
+    # houme route
     @app.route("/")
     def index():
+        return render_template("index.html")
+
+    # dashboard route
+    @app.route("/dashboard")
+    @login_required
+    def dashboard():
 
         start_str = (request.args.get("start") or "").strip()
         end_str = (request.args.get("end") or "").strip()
@@ -109,7 +115,7 @@ def create_app():
             start_date = end_date = None
             start_str = end_str = ""
 
-        q = Expense.query
+        q = Expense.query.filter_by(user_id=current_user.id)
 
         if start_date:
             q = q.filter(Expense.date >= start_date)
@@ -132,7 +138,7 @@ def create_app():
         cat_q = db.session.query(
             Expense.category,
             func.sum(Expense.amount)
-        )
+        ).filter(Expense.user_id==current_user.id)
 
         if start_date:
             cat_q = cat_q.filter(Expense.date >= start_date)
@@ -158,7 +164,7 @@ def create_app():
         day_q = db.session.query(
             Expense.category,
             func.sum(Expense.amount)
-        )
+        ).filter(Expense.user_id==current_user.id)
 
         if start_date:
             day_q = day_q.filter(Expense.date >= start_date)
@@ -183,7 +189,7 @@ def create_app():
 
 
         return render_template(
-            "index.html",
+            "dashboard.html",
             categories=CATEGORIES,
             today=date.today().isoformat(),
             expenses=expenses,
@@ -261,35 +267,52 @@ def create_app():
 
     
     
-    @app.route('/login')
+    @app.route('/login', methods=["GET", "POST"])
     def login():
-
         errors = []
 
         if request.method == "POST":
             email = (request.form.get("email") or "").strip()
-            password = request.form.get("password")
+            password = request.form.get("password") or ""
 
             if not email:
                 errors.append("email is required!")
             if not password:
                 errors.append("password is required!")
 
-                
+            if not errors:
+                User = user.query.filter_by(email=email).first()
+
+                if not User or not check_password_hash(User.password_hash, password):
+                    errors.append("Invalid email or password")
+                else:
+                    login_user(User)
+                    flash(f"welcome back {User.username}", "success")
+                    return redirect(url_for("dashboard"))
+
+        return render_template('login.html', errors=errors)
 
 
-        return render_template('login.html')
+    @app.route("/logout")
+    @login_required
+    def logout():
+        logout_user()
+        flash("see you next time", "success")
+        return redirect(url_for("index"))
+
 
     
 
     @login_manager.user_loader
     def load_user(user_id):
-        return None
+        return user.query.get(int(user_id))
+
 
 
 
     # Add expense
     @app.route("/add", methods=['POST'])
+    @login_required
     def add():
 
         description = (
@@ -311,7 +334,7 @@ def create_app():
 
         if not description or not amount_str or not category or not date_str:
             flash("Please fill all the fields", "error")
-            return redirect(url_for("index"))
+            return redirect(url_for("dashboard"))
 
 
         try:
@@ -322,7 +345,7 @@ def create_app():
 
         except ValueError:
             flash("Amount must be a positive number", "error")
-            return redirect(url_for("index"))
+            return redirect(url_for("dashboard"))
 
 
         try:
@@ -339,7 +362,8 @@ def create_app():
             description=description,
             amount=amount,
             category=category,
-            date=d
+            date=d,
+            user_id=current_user.id
         )
 
         db.session.add(e)
@@ -347,28 +371,32 @@ def create_app():
 
         flash("Expense added!", "success")
 
-        return redirect(url_for("index"))
+        return redirect(url_for("dashboard"))
 
 
     # Delete expense
     @app.route("/delete/<int:expense_id>", methods=['POST'])
+    @login_required
     def delete(expense_id):
 
-        e = Expense.query.get_or_404(expense_id)
+        # e = Expense.query.get_or_404(expense_id)
+        e = Expense.query.filter_by(id=expense_id, user_id=current_user.id).first_or_404()
 
         db.session.delete(e)
         db.session.commit()
 
         flash("Expense deleted", "success")
 
-        return redirect(url_for("index"))
+        return redirect(url_for("dashboard"))
 
 
     # Edit expense - GET
     @app.route("/edit/<int:expense_id>", methods=['GET'])
+    @login_required
     def edit(expense_id):
 
-        e = Expense.query.get_or_404(expense_id)
+        e = Expense.query.filter_by(id=expense_id, user_id=current_user.id).first_or_404()
+
 
         return render_template(
             "edit.html",
@@ -382,7 +410,8 @@ def create_app():
     @app.route("/edit/<int:expense_id>", methods=['POST'])
     def edit_post(expense_id):
 
-        e = Expense.query.get_or_404(expense_id)
+        e = Expense.query.filter_by(id=expense_id, user_id=current_user.id).first_or_404()
+
 
         description = (
             request.form.get("description") or ""
@@ -446,11 +475,12 @@ def create_app():
 
         flash("Expense updated!", "success")
 
-        return redirect(url_for("index"))
+        return redirect(url_for("dashboard"))
 
 
     # Export CSV
     @app.route("/export.csv")
+    @login_required
     def export_csv():
 
         start_str = (
@@ -470,7 +500,7 @@ def create_app():
         end_date = parse_date_or_none(end_str)
 
 
-        q = Expense.query
+        q = Expense.query.filter_by(user_id=current_user.id)
 
         if start_date:
             q = q.filter(Expense.date >= start_date)

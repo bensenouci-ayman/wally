@@ -31,7 +31,12 @@ select {
     max-width: 1200px;
     width: 100%;
     margin: 0 auto;
-    padding: 2rem 1rem;
+    /* padding: 2rem 1rem; */
+    padding-top: 0;
+    padding-bottom: 2rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    position: relative;
 }
 
 .page-title {
@@ -337,6 +342,10 @@ thead {
     margin: 0 auto;
     padding: 1rem;
 }
+.navigation a:not(.exception) {
+    display: inline-block;
+    margin-bottom: 2rem;
+}
 
 .navigation img {
     margin-left: 1rem;
@@ -352,4 +361,10 @@ thead {
     position: relative;
     max-width: 100%;
     height: 300px;
+}
+
+.exit-field {
+    position: fixed;
+    right: 4rem;
+    bottom: 1.5rem;
 }
