@@ -8,6 +8,7 @@ from sqlalchemy import text
 import re
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.exc import IntegrityError
+from datetime import timedelta
 
 
 
@@ -27,6 +28,7 @@ def create_app():
     # }
 
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.config['REMEBER_COOKIE_DURATION'] = timedelta(days=15)
     app.config['SECRET_KEY'] = 'my-secret-key-for-cs50-final-exam'
 
     # Initialize database with app
@@ -286,9 +288,16 @@ def create_app():
                 if not User or not check_password_hash(User.password_hash, password):
                     errors.append("Invalid email or password")
                 else:
-                    login_user(User)
+                    remember_me = request.form.get("remember") == "1"
+
+                    login_user(User, remember=remember_me)
                     flash(f"welcome back {User.username}", "success")
+
+
                     return redirect(url_for("dashboard"))
+
+
+
 
         return render_template('login.html', errors=errors)
 

@@ -1,4 +1,5 @@
-{% extends "layout.html" %} {% block title %}Home · Flask Auth Lite{% endblock %}
+{% extends "layout.html" %}
+  {% block title %}Home · Flask Auth Lite{% endblock %}
 {% block body %}
 
 <div class="container">
@@ -7,20 +8,21 @@
     Track spending, filter by date/category, and visualize instantly.
   </p>
   
-  <div class="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
+  <div class="grid-charts">
+
     <a
-      class="rounded-2xl border border-slate-800 bg-slate-900 p-4 hover:bg-slate-800/50"
+      class="home-card"
       href="/register"
     >
       <h2 class="card-title">Register</h2>
-      <p class="text-sm text-slate-400">Create a new account</p>
+      <p class="card-subtext">Create a new account</p>
     </a>
     <a
-      class="rounded-2xl border border-slate-800 bg-slate-900 p-4 hover:bg-slate-800/50"
+      class="home-card"
       href="/login"
     >
       <h2 class="card-title">Login</h2>
-      <p class="text-sm text-slate-400">Access your dashboard</p>
+      <p class="card-subtext">Access your dashboard</p>
     </a>
   </div>
 </div>
