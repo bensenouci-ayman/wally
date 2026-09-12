@@ -368,26 +368,33 @@ thead {
     right: 4rem;
     bottom: 1.5rem;
 }
+.exit-field:hover{
+    cursor: pointer;
+}
 
 /* index page style */
 
 .home-links {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 2rem;    
+    display: flex;
+    flex-direction: column;
 }
 @media (min-width: 640px) {
     .home-links {
-        grid-template-columns: 2fr;
+        flex-direction: row;
+        /* gap: 2rem; */
+        justify-content: space-between;
     }
 }
 
 .home-card {
+    /* display: block; */
     text-decoration: none; 
     color: #f1f5f9; 
     border: 1px solid #1e293b; 
     padding: 1rem; 
     border-radius: 1rem;
+    width: calc((100% /2) - 1rem);
+    margin-bottom: 0;
 }
 .home-card:hover {
     background-color: rgba(30, 41, 59, 0.5);
@@ -416,4 +423,16 @@ thead {
     gap: .5rem;
     font-size: .875rem;
     color: rgb(148, 163, 184);
+}
+
+/* errors styling */
+
+.error ul {
+    list-style: none; 
+    line-height: 1.55; 
+    margin-bottom: 1rem;
+}
+.error li {
+    font-size: .875rem; 
+    color: #f1f5f9;
 }
