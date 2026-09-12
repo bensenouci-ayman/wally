@@ -309,6 +309,33 @@ def create_app():
         flash("see you next time", "success")
         return redirect(url_for("index"))
 
+    @app.route("/change_password", methods=["GET", "POST"])
+    @login_required
+    def change_password():
+        
+        errors = []
+
+        if request.method == "POST":
+                current_password = request.form.get("current_password") or ""
+                new_password = request.form.get("new_password") or ""
+                confirm_password = request.form.get("confirm_password") or ""
+
+                if not check_password_hash(current_user.password_hash, current_password):
+                    errors.append("current password is incorrect")
+                if len(new_password) < 6:
+                    errors.append("new password should be more than 6 characters")
+                if new_password != confirm_password:
+                    errors.append("new password and confirmation doesn't match!")
+                if not errors:
+                    current_user.password_hash = generate_password_hash(new_password)
+                    db.session.commit()
+
+                flash("Password updated successfuly!", "success")
+                return redirect(url_for("dashboard"))
+
+        return render_template("change_password.html", errors=errors)
+
+
 
     
 
